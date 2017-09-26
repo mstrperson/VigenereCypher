@@ -2,13 +2,24 @@
 using System.IO;
 using System.Collections.Generic;
 
+
+
 namespace VigenereCypher
 {
-	class MainClass
+	/// <summary>
+	/// Encrypte and Decrypt messages using a Vigenere Cypher
+	/// </summary>
+	public class VigenereCypher
 	{
 		public static readonly String ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 		public static readonly int keyBase = 10;
 
+		/// <summary>
+		/// Crack the specified encryptedMessage given a key of the supplied length.
+		/// </summary>
+		/// <returns>Potential solutions to the cracked message.</returns>
+		/// <param name="encryptedMessage">Encrypted message.</param>
+		/// <param name="keyLength">Key length.</param>
 		public static Dictionary<int[], string> Crack(String encryptedMessage, int keyLength)
 		{
 			Dictionary<int[], string> solutions = new Dictionary<int[], string>();
