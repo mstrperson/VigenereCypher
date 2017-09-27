@@ -12,6 +12,7 @@ namespace VigenereCypher
 	public class VigenereCypher
 	{
 		public static readonly String ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        public static readonly String alphabet = ALPHABET.ToLower();
 		public static readonly int keyBase = 10;
 
 		/// <summary>
@@ -68,28 +69,51 @@ namespace VigenereCypher
 			return solutions;
 		}
 
+        /// <summary>
+        /// Encrypt a message with the given key array.
+        /// </summary>
+        /// <param name="msg"></param>
+        /// <param name="key"></param>
+        /// <returns></returns>
 		public static String EncryptMessage(String msg, int[] key)
 		{
 			String encrypted = "";
 			for (int i = 0; i < msg.Length; i++)
 			{
-				encrypted += EncryptCharacter(ALPHABET, msg[i], key[i % key.Length]);
+                if (ALPHABET.IndexOf(msg[i]) >= 0)
+                    encrypted += EncryptCharacter(ALPHABET, msg[i], key[i % key.Length]);
+                else
+                    encrypted += EncryptCharacter(alphabet, msg[i], key[i % key.Length]);
 			}
 
 			return encrypted;
 		}
 
+        /// <summary>
+        /// Decrypt a message with the provided key array.
+        /// </summary>
+        /// <param name="msg"></param>
+        /// <param name="key"></param>
+        /// <returns></returns>
 		public static String DecryptMessage(string msg, int[] key)
 		{
 			String encrypted = "";
 			for (int i = 0; i<msg.Length; i++)
-			{
-				encrypted += DecryptCharacter(ALPHABET, msg[i], key[i % key.Length]);
-			}
+            {
+                if (ALPHABET.IndexOf(msg[i]) >= 0)
+                    encrypted += DecryptCharacter(ALPHABET, msg[i], key[i % key.Length]);
+                else
+                    encrypted += DecryptCharacter(alphabet, msg[i], key[i % key.Length]);
+            }
 
 			return encrypted;
 		}
 
+        /// <summary>
+        /// Move on to the next key.  When the key rolls over to 0, 0, 0, ... returns true.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
 		public static bool IncrementKey(ref int[] key)
 		{
 			int place = key.Length - 1;
@@ -106,6 +130,13 @@ namespace VigenereCypher
 			return !done;
 		}
 
+        /// <summary>
+        /// Encrypt a character using the given key.
+        /// </summary>
+        /// <param name="charSet"></param>
+        /// <param name="ch"></param>
+        /// <param name="key"></param>
+        /// <returns></returns>
 		public static char EncryptCharacter(string charSet, char ch, int key)
 		{
 			int charNumber = charSet.IndexOf(ch);
@@ -121,6 +152,13 @@ namespace VigenereCypher
 			return encChar;
 		}
 
+        /// <summary>
+        /// Decrypt the character using the key.
+        /// </summary>
+        /// <param name="charSet"></param>
+        /// <param name="ch"></param>
+        /// <param name="key"></param>
+        /// <returns></returns>
 		public static char DecryptCharacter(string charSet, char ch, int key)
 		{
 			return EncryptCharacter(charSet, ch, -key);
