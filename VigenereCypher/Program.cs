@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Collections.Generic;
+using System.Linq;
 
 
 
@@ -38,12 +39,29 @@ namespace VigenereCypher
 				dictionary.Add(reader.ReadLine().Trim());
 			}
 
-			while (!IncrementKey(ref key))
+            DateTime startTime = DateTime.Now;
+            Console.WriteLine("Starting crack Process at:  {0}", startTime.ToLongTimeString());
+            TimeSpan prevDuration = new TimeSpan(0);
+            TimeSpan duration = new TimeSpan(0);
+            while (!IncrementKey(ref key))
 			{
+                duration = DateTime.Now - startTime;
+                if(duration - prevDuration > TimeSpan.FromMinutes(1))
+                {
+                    prevDuration = duration;
+                    Console.WriteLine("{0} has elapsed.", duration);
+                    Console.Write("Attempting Current Key:  ");
+                    for (int i = 0; i < key.Length; i++)
+                    {
+                        Console.Write("{0} ", key[i]);
+                    }
+                }
+
 				String message = DecryptMessage(encryptedMessage, key);
 				String[] words = message.Split(' ');
 
 				bool solution = true;
+                int count = 0;
 				foreach (String word in words)
 				{
 					if (!dictionary.Contains(word.ToLower()))
@@ -51,6 +69,9 @@ namespace VigenereCypher
 						solution = false;
 						break;
 					}
+
+                    if (++count > 4 && solution)
+                        break;
 				}
 
 				if (solution)
@@ -166,10 +187,22 @@ namespace VigenereCypher
 
 		public static void Main(string[] args)
 		{
-			Console.WriteLine("Enter the encrypted message...");
-			String encryptedMessage = Console.ReadLine().ToUpper();
+            //Console.WriteLine("Enter the encrypted message...");
+            //String encryptedMessage = Console.ReadLine().ToUpper();
 
-			Crack(encryptedMessage, 4);
+            //Crack(encryptedMessage, 4);
+
+            StreamReader reader = new StreamReader(new FileStream(@"C:\temp\EncryptedMessage.txt", FileMode.Open));
+            String content = reader.ReadToEnd();
+            reader.Close();
+            String encryptedContent = Crack(content, 9).First().Value;
+
+            Console.Write(encryptedContent);
+
+            StreamWriter writer = new StreamWriter(new FileStream(@"C:\temp\CrackedMessage.txt", FileMode.CreateNew));
+            writer.Write(encryptedContent);
+            writer.Flush();
+            writer.Close();
 
 			Console.WriteLine("Done!");
 			Console.ReadKey();
