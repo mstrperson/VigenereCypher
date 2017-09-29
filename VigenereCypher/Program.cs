@@ -55,6 +55,7 @@ namespace VigenereCypher
                     {
                         Console.Write("{0} ", key[i]);
                     }
+                    Console.WriteLine("\n___________________________________");
                 }
 
 				String message = DecryptMessage(encryptedMessage, key);
