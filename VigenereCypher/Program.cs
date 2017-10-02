@@ -2,6 +2,8 @@
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 
 
@@ -188,22 +190,26 @@ namespace VigenereCypher
 
 		public static void Main(string[] args)
 		{
-            //Console.WriteLine("Enter the encrypted message...");
-            //String encryptedMessage = Console.ReadLine().ToUpper();
+			//Console.WriteLine("Enter the encrypted message...");
+			//String encryptedMessage = Console.ReadLine().ToUpper();
 
-            //Crack(encryptedMessage, 4);
+			//Crack(encryptedMessage, 4);
 
-            StreamReader reader = new StreamReader(new FileStream(@"C:\temp\EncryptedMessage.txt", FileMode.Open));
-            String content = reader.ReadToEnd();
-            reader.Close();
-            String encryptedContent = Crack(content, 9).First().Value;
+			ThreadedCracker cracker = new ThreadedCracker();
 
-            Console.Write(encryptedContent);
+			StreamReader reader = new StreamReader(new FileStream(@"C:\temp\EncryptedMessage.txt", FileMode.Open));
+			String content = reader.ReadToEnd();
+			reader.Close();
+			Dictionary<int[], String> thread = cracker.Crack(content, 9);
 
-            StreamWriter writer = new StreamWriter(new FileStream(@"C:\temp\CrackedMessage.txt", FileMode.CreateNew));
-            writer.Write(encryptedContent);
-            writer.Flush();
-            writer.Close();
+			String encryptedContent = thread.First().Value;
+
+			Console.Write(encryptedContent);
+
+			StreamWriter writer = new StreamWriter(new FileStream(@"C:\temp\CrackedMessage.txt", FileMode.CreateNew));
+			writer.Write(encryptedContent);
+			writer.Flush();
+			writer.Close();
 
 			Console.WriteLine("Done!");
 			Console.ReadKey();
