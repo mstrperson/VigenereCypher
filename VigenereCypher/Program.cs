@@ -205,7 +205,7 @@ namespace VigenereCypher
 			StreamReader reader = new StreamReader(new FileStream(@"C:\temp\EncryptedMessage.txt", FileMode.Open));
 			String content = reader.ReadToEnd();
 			reader.Close();
-			Dictionary<int[], String> thread = cracker.Crack2(content, 9);
+			Dictionary<int[], String> thread = cracker.Crack(content, 9);
 
 			String encryptedContent = thread.First().Value;
 
