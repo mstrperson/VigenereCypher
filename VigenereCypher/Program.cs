@@ -80,12 +80,7 @@ namespace VigenereCypher
 				if (solution)
 				{
 					Console.WriteLine("Found Solution:  {0}", message);
-					Console.Write("Key:  ");
-					for (int i = 0; i < key.Length; i++)
-					{
-						Console.Write("{0} ", key[i]);
-					}
-					Console.WriteLine();
+					PrintKey(key);
 					solutions.Add((int[])key.Clone(), message);
 				}
 			}
@@ -111,6 +106,16 @@ namespace VigenereCypher
 			}
 
 			return encrypted;
+		}
+
+		public static void PrintKey(int[] key)
+		{
+			Console.Write("Key:  ");
+			for (int i = 0; i<key.Length; i++)
+			{
+				Console.Write("{0} ", key[i]);
+			}
+			Console.WriteLine();
 		}
 
         /// <summary>
@@ -200,7 +205,7 @@ namespace VigenereCypher
 			StreamReader reader = new StreamReader(new FileStream(@"C:\temp\EncryptedMessage.txt", FileMode.Open));
 			String content = reader.ReadToEnd();
 			reader.Close();
-			Dictionary<int[], String> thread = cracker.Crack(content, 9);
+			Dictionary<int[], String> thread = cracker.Crack2(content, 9);
 
 			String encryptedContent = thread.First().Value;
 
